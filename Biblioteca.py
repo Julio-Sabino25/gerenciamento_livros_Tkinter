@@ -19,14 +19,18 @@ pd.set_option('display.max_columns', None)
 #arquivos em Excel
 
 try:
-    biblioteca = pd.read_excel(r"C:\Users\julio\Documents\Pasta GIT\Poo Estudos\biblioteca.xlsx")
-    clientes = pd.read_excel(r'C:\Users\julio\Documents\Pasta GIT\Poo Estudos\Clientes_cadastrados.xlsx')
+    biblioteca = pd.read_excel(r"C:\Users\julio\Documents\Pasta GIT\Projetos Python\gerenciamento_livros_Tkinter\biblioteca.xlsx")
+    clientes = pd.read_excel(r'C:\Users\julio\Documents\Pasta GIT\Projetos Python\gerenciamento_livros_Tkinter\Clientes_cadastrados.xlsx')
+    caminho1=biblioteca
+    caminho2=clientes
     opcao = 1
     
 except FileNotFoundError:
     print("Arquivos não encontrados no primeiro caminho, tentando o segundo...")
-    biblioteca = pd.read_excel(r'C:\Users\julio\Documents\Pasta GIT\Biblioteca\biblioteca.xlsx')
-    clientes = pd.read_excel(r'C:\Users\julio\Documents\Pasta GIT\Biblioteca\Clientes_cadastrados.xlsx')
+    biblioteca = pd.read_excel(r"biblioteca.xlsx")
+    clientes = pd.read_excel(r'Clientes_cadastrados.xlsx')
+    caminho1=biblioteca
+    caminho2=clientes
     opcao = 2
     
 except Exception as e:
@@ -81,7 +85,7 @@ def Multa(nome_do_livro,devolveu):
 ## Cadastrando Clientes:
 
 def Salva_Cadastro():
-    clientes.to_excel(r'C:\Users\julio\Documents\Pasta GIT\Poo Estudos\Clientes_cadastrados.xlsx', index=False)
+    clientes.to_excel(caminho2, index=False)
 
 class cadastro:
     def __init__(self,nome,cpf,nascimento,telefone,endereco,bairro,cidade,cep,obs):
@@ -189,7 +193,10 @@ class funcoes():
     def aluga_livro(self):
         from Aluga_Livro import Aluguel  
         Aluguel(self.root) 
-        
+    
+    def abrir_cadastro(self):
+        import Cadastro  
+        cadastro(self.root)   
     
                 
 class Gerencial(funcoes):
@@ -321,7 +328,7 @@ class Gerencial(funcoes):
             self.root.destroy()
         
         barra_menu.add_cascade(label="Opções",menu=filemenu)
-        filemenu.add_command(label="Cadastrar novo Cliente",command=Quit)
+        filemenu.add_command(label="Cadastrar novo Cliente",command=self.abrir_cadastro())
         filemenu.add_command(label="Sair",command=Quit)    
         
 Gerencial()

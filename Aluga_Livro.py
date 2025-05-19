@@ -6,7 +6,7 @@ from tkinter import tix
 
 
 
-clientes = pd.read_excel(r'C:\Users\julio\Documents\Pasta GIT\Biblioteca\Clientes_cadastrados.xlsx')
+clientes = pd.read_excel(r"C:\Users\julio\Documents\Pasta GIT\Projetos Python\gerenciamento_livros_Tkinter\biblioteca.xlsx")
 
 
 

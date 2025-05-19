@@ -26,7 +26,7 @@ except FileNotFoundError:
     opcao = 2
     
 except Exception as e:
-    opcao = f"Ocorreu um erro ao tentar ler os arquivos: {str(e)}"
+    print(f"Ocorreu um erro ao tentar ler os arquivos: {str(e)}")
     
 finally:
     print(f"Resultado: consegui ler na opção {opcao}")
