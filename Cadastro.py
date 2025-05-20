@@ -18,11 +18,11 @@ pd.set_option('display.max_columns', None)
 #lendo o banco de dados:
 
 try:
-    clientes = pd.read_excel(r'C:\Users\julio\Documents\Pasta GIT\Poo Estudos\Clientes_cadastrados.xlsx')
+    clientes = pd.read_excel(rf"C:\Users\julio\Documents\Pasta GIT\Projetos Python\gerenciamento_livros_Tkinter\Clientes_cadastrados.xlsx")
     opcao = 1
 except FileNotFoundError:
     print("Arquivos não encontrados no primeiro caminho, tentando o segundo...")
-    clientes = pd.read_excel(r'C:\Users\julio\Documents\Pasta GIT\Biblioteca\Clientes_cadastrados.xlsx')
+    clientes = pd.read_excel(rf"C:\Users\julio\Documents\Pasta GIT\Biblioteca\Clientes_cadastrados.xlsx")
     opcao = 2
     
 except Exception as e:
@@ -36,7 +36,75 @@ finally:
 
 
 def Salva_Cadastro():
-    clientes.to_excel(r'C:\Users\julio\Documents\Pasta GIT\Poo Estudos\Clientes_cadastrados.xlsx', index=False)
+    clientes.to_excel(r'C:\Users\julio\Documents\Pasta GIT\Projetos Python\gerenciamento_livros_Tkinter\Clientes_cadastrados.xlsx', index=False)
+    
+class CadastroGUI:
+    def __init__(self, root):
+        self.root = root
+        self.janela = Toplevel(self.root)
+        self.janela.title("Cadastro de Clientes")
+        self.configurar_interface()
+        
+    def configurar_interface(self):
+        self.janela.geometry("800x600")
+        self.janela.configure(background="#000000")
+        
+        self.frame_principal = Frame(self.janela, bg="#dfe3ee")
+        self.frame_principal.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        # Campos do formulário
+        campos = [
+            ("Nome", 0),
+            ("CPF", 1),
+            ("Data Nascimento", 2),
+            ("Telefone", 3),
+            ("Endereço", 4),
+            ("Bairro", 5),
+            ("Cidade", 6),
+            ("CEP", 7),
+            ("Observações", 8)
+        ]
+        
+        self.entries = {}
+        for texto, linha in campos:
+            Label(self.frame_principal, text=texto+":", bg="#dfe3ee").grid(row=linha, column=0, sticky='w', padx=5, pady=5)
+            entry = Entry(self.frame_principal, width=40)
+            entry.grid(row=linha, column=1, padx=5, pady=5)
+            self.entries[texto.lower().replace(" ", "_")] = entry
+        
+        # Botão de cadastro
+        Button(self.frame_principal, text="Cadastrar", command=self.cadastrar_cliente,
+              bg="#759fe6", fg="white").grid(row=9, column=0, columnspan=2, pady=10)
+
+    def cadastrar_cliente(self):
+        try:
+            # Obter valores dos campos
+            dados = {campo: entry.get() for campo, entry in self.entries.items()}
+            
+            # Criar instância da classe de lógica
+            novo_cadastro = cadastro(
+                nome=dados['nome'],
+                cpf=dados['cpf'],
+                nascimento=dados['data_nascimento'],
+                telefone=dados['telefone'],
+                endereco=dados['endereço'],
+                bairro=dados['bairro'],
+                cidade=dados['cidade'],
+                cep=dados['cep'],
+                obs=dados['observações']
+            )
+            
+            # Executar cadastro
+            resultado = novo_cadastro.cadastrar_atributo()
+            if resultado is None:
+                print("Cadastro realizado com sucesso!")
+                Salva_Cadastro()  # Salva no Excel
+                self.janela.destroy()  # Fecha a janela após cadastro
+            else:
+                print(resultado)
+        except Exception as e:
+            print(f"Erro ao cadastrar: {str(e)}")
+
 
 class cadastro:
     def __init__(self,nome,cpf,nascimento,telefone,endereco,bairro,cidade,cep,obs):
@@ -134,13 +202,13 @@ class Gerencial(funcoes):
         
         
     def tela(self):
-        self.janela_cli = Toplevel(self.root) 
-        self.janela_cli.title("Gerenciamento de Biblioteca")
-        self.janela_cli.configure(background="#000000") 
-        self.janela_cli.geometry("900x700")
-        self.janela_cli.resizable(True,True)
-        self.janela_cli.maxsize(width=1020,height=800)
-        self.janela_cli.minsize(width=800, height=500)  
+ 
+        self.root.title("Gerenciamento de Biblioteca")
+        self.root.configure(background="#000000") 
+        self.root.geometry("900x700")
+        self.root.resizable(True,True)
+        self.root.maxsize(width=1020,height=800)
+        self.root.minsize(width=800, height=500)
     
 
 
@@ -227,16 +295,16 @@ class Gerencial(funcoes):
         self.lista.bind("<Double-1>",self.Clique_duplo)
         
     def Menus(self):
-        barra_menu=Menu(self.root)
+        barra_menu = Menu(self.root)
         self.root.config(menu=barra_menu)  
         
-        filemenu=Menu(barra_menu)
-       
-        def Quit():
-            self.root.destroy()
+        filemenu = Menu(barra_menu, tearoff=0)
+        filemenu.add_command(label="Cadastrar novo Cliente", command=self.abrir_cadastro)
+        filemenu.add_command(label="Sair", command=self.root.destroy)
         
-        barra_menu.add_cascade(label="Opções",menu=filemenu)
-        filemenu.add_command(label="Cadastrar novo Cliente",command=Quit)
-        filemenu.add_command(label="Sair",command=Quit)    
+        barra_menu.add_cascade(label="Opções", menu=filemenu)
+    
+    def abrir_cadastro(self):
+        CadastroGUI(self.root)   
         
 Gerencial()

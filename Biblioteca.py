@@ -189,14 +189,20 @@ class funcoes():
         for index, row in df_filtrado.iterrows():
             self.lista.insert("", "end", text=row['ID_do_livro'], values=(row['Nome do livro'], row['Autor'], row['Genero'], row['data da locação']))
 
-    
+          
     def aluga_livro(self):
-        from Aluga_Livro import Aluguel  
-        Aluguel(self.root) 
-    
+        if not hasattr(self, 'aluguel_window') or not self.aluguel_window.winfo_exists():
+            from Aluga_Livro import Aluguel
+            self.aluguel_window = Aluguel(self.root)
+        else:
+            self.aluguel_window.nova_janela.lift() 
+            
     def abrir_cadastro(self):
-        import Cadastro  
-        cadastro(self.root)   
+        if not hasattr(self, 'janela_cadastro') or not self.janela_cadastro.janela.winfo_exists():
+            from Cadastro import CadastroGUI
+            self.janela_cadastro = CadastroGUI(self.root)
+        else:
+            self.janela_cadastro.janela.lift()
     
                 
 class Gerencial(funcoes):

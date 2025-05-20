@@ -49,25 +49,21 @@ class funcs_internas():
 class Aluguel(funcs_internas):
         
     def __init__(self, root):
-        self.root = root
-        self.tela_loca()  # Cria a nova janela (Toplevel)
-        self.subtelas()  # Cria as subtelas
+        self.root = root 
+        self.nova_janela = Toplevel(self.root) 
+        self.subtelas()
         self.descricao_texto()
         self.Caixa_texto()
         self.botao()
         self.Lista()
         self.pop_cli()
-        self.descricao_texto()  # Depois, adiciona os textos e widgets nas subtelas
-   
+        
     def tela_loca(self):
-        # Cria uma nova janela (Toplevel) filha de self.root
-        self.nova_janela = Toplevel(self.root)
-        self.nova_janela.configure(background="#000000")  # Fundo preto
-        self.nova_janela.geometry("600x400")
+        self.nova_janela.title("Locação de Livros")
+        self.nova_janela.configure(background="#000000")
+        self.nova_janela.geometry("800x600")
         self.nova_janela.resizable(True, True)
-        self.nova_janela.maxsize(width=1020, height=800)
-        self.nova_janela.minsize(width=800, height=500)  
-    
+        
     def subtelas(self):
         # Título
         self.label_titulo = Label(self.nova_janela, text="Locação de livros", bg="#dfe3ee", font=("Arial", 14, "bold"))
